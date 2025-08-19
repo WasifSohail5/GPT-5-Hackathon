@@ -453,7 +453,7 @@ class DataPreprocessor:
 
             # Extract datetime features if not already done
             for col in datetime_cols:
-                if f"{col}_year" not in df.columns:  
+                if f"{col}_year" not in df.columns:
                     df[f"{col}_year"] = df[col].dt.year
                     df[f"{col}_month"] = df[col].dt.month
                     df[f"{col}_day"] = df[col].dt.day

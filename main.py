@@ -17,17 +17,12 @@ from dotenv import load_dotenv
 import time
 import sys
 
-# Load environment variables from .env file if exists
 load_dotenv()
-
-# Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 
-# Console output formatting helpers
 def print_header(text):
-    """Print a header with decoration"""
     width = min(100, max(80, len(text) + 20))
     print("\n" + "=" * width)
     print(f"{text:^{width}}")
@@ -35,23 +30,19 @@ def print_header(text):
 
 
 def print_subheader(text):
-    """Print a subheader with decoration"""
     print(f"\n--- {text} ---")
 
 
 def print_step(step_num, total_steps, description):
-    """Print a step indicator"""
     print(f"[Step {step_num}/{total_steps}] {description}")
 
 
 def print_analysis(text, indent=0):
-    """Print analysis information with indentation"""
     indent_str = " " * indent
     print(f"{indent_str}→ {text}")
 
 
 def print_thinking(text):
-    """Print thinking output with animation"""
     print("\nThinking", end="", flush=True)
     for _ in range(3):
         time.sleep(0.3)
@@ -60,7 +51,6 @@ def print_thinking(text):
 
 
 def print_progress_bar(iteration, total, prefix='', suffix='', length=50, fill='█'):
-    """Print a progress bar"""
     percent = ("{0:.1f}").format(100 * (iteration / float(total)))
     filled_length = int(length * iteration // total)
     bar = fill * filled_length + '-' * (length - filled_length)
@@ -71,15 +61,6 @@ def print_progress_bar(iteration, total, prefix='', suffix='', length=50, fill='
 
 
 def generate_html_report(original_df, processed_df, analysis_results, output_path):
-    """
-    Generate an HTML report of the preprocessing steps and results
-
-    Args:
-        original_df: Original DataFrame
-        processed_df: Processed DataFrame
-        analysis_results: Analysis results
-        output_path: Path to save HTML report
-    """
     print_subheader(f"Generating HTML report at {output_path}")
 
     html = ["<!DOCTYPE html>", "<html>", "<head>",
@@ -256,16 +237,6 @@ def generate_html_report(original_df, processed_df, analysis_results, output_pat
 
 
 def process_with_progress(df, analysis_results):
-    """
-    Process dataset with progress tracking
-
-    Args:
-        df: Original DataFrame
-        analysis_results: Analysis results
-
-    Returns:
-        Processed DataFrame
-    """
     print_header("DETAILED PREPROCESSING")
 
     preprocessor = DataPreprocessor(analysis_results)
@@ -415,13 +386,6 @@ def process_with_progress(df, analysis_results):
 
 
 def display_dataset_summary(df, title="Dataset Summary"):
-    """
-    Display a summary of the dataset
-
-    Args:
-        df: DataFrame to summarize
-        title: Title for the summary
-    """
     print_subheader(title)
     print_analysis(f"Shape: {df.shape[0]} rows × {df.shape[1]} columns")
 
@@ -454,12 +418,6 @@ def display_dataset_summary(df, title="Dataset Summary"):
 
 
 def display_analysis_results(analysis_results):
-    """
-    Display the analysis results in a readable format
-
-    Args:
-        analysis_results: Analysis results from GPT-5
-    """
     print_header("GPT-5 ANALYSIS RESULTS")
 
     # Dataset quality score
@@ -619,7 +577,7 @@ def main():
 
     # Hardcode paths if not provided and not using GUI
     if not args.input:
-        args.input = "dataset.csv"  # Default input path
+        args.input = "dataset.csv"
         print_analysis(f"Using default input path: {args.input}")
 
     if not args.output:
