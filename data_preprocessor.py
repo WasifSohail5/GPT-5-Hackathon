@@ -15,105 +15,47 @@ logger = logging.getLogger(__name__)
 
 class DataPreprocessor:
     def __init__(self, analysis_results: Dict[str, Any]):
-        """
-        Initialize the DataPreprocessor with analysis results from GPT-5
-
-        Args:
-            analysis_results: Analysis results from GPT-5
-        """
         self.analysis_results = analysis_results
         self.transformers = {}  # Store fitted transformers for potential reuse
 
     def preprocess_dataset(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Preprocess the dataset based on GPT-5 analysis
-
-        Args:
-            df: Original pandas DataFrame
-
-        Returns:
-            Preprocessed pandas DataFrame
-        """
         processed_df = df.copy()
-
-        # Handle custom missing values first
         processed_df = self._handle_custom_missing_values(processed_df)
-
-        # Check dataset size to determine if we need parallel processing
         use_parallel = len(df) * len(df.columns) > 100000
-
         if use_parallel:
             return self.preprocess_dataset_parallel(df)
         else:
             column_analyses = self.analysis_results.get('column_analyses', {})
 
-            # Process each column according to the analysis
             for column, analysis in column_analyses.items():
                 if column not in processed_df.columns:
                     logger.warning(f"Column {column} not found in DataFrame. Skipping.")
                     continue
-
                 logger.info(f"Processing column: {column}")
-
-                # Handle data type conversions
                 processed_df = self._convert_data_types(processed_df, column, analysis)
-
-                # Handle missing values
                 processed_df = self._handle_missing_values(processed_df, column, analysis)
-
-                # Handle outliers
                 processed_df = self._handle_outliers(processed_df, column, analysis)
-
-                # Apply transformations
                 processed_df = self._apply_transformations(processed_df, column, analysis)
-
-                # Perform feature engineering
                 processed_df = self._engineer_features(processed_df, column, analysis)
-
-            # Apply overall recommendations (like dimensionality reduction)
             processed_df = self._apply_overall_recommendations(processed_df)
-
-            # Process text features if any
             processed_df = self._process_text_features(processed_df)
-
-            # Create advanced features
             processed_df = self._create_advanced_features(processed_df)
-
             return processed_df
 
     def preprocess_dataset_parallel(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Preprocess the dataset using parallel processing for large datasets
-
-        Args:
-            df: Original pandas DataFrame
-
-        Returns:
-            Preprocessed pandas DataFrame
-        """
         processed_df = df.copy()
-
-        # Handle custom missing values first
         processed_df = self._handle_custom_missing_values(processed_df)
-
         column_analyses = self.analysis_results.get('column_analyses', {})
-
-        # Set up parallel processing
         num_cores = max(1, multiprocessing.cpu_count() - 1)
         logger.info(f"Using parallel processing with {num_cores} cores")
-
-        # Process columns in parallel
         processed_series = Parallel(n_jobs=num_cores)(
             delayed(self._parallel_process_column)(processed_df, column, analysis)
             for column, analysis in column_analyses.items()
             if column in processed_df.columns
         )
 
-        # Update dataframe with processed columns
         for i, (column, _) in enumerate([(c, a) for c, a in column_analyses.items() if c in df.columns]):
             processed_df[column] = processed_series[i]
-
-        # Apply overall recommendations and feature engineering
         processed_df = self._apply_overall_recommendations(processed_df)
         processed_df = self._process_text_features(processed_df)
         processed_df = self._create_advanced_features(processed_df)
@@ -121,34 +63,16 @@ class DataPreprocessor:
         return processed_df
 
     def _parallel_process_column(self, df: pd.DataFrame, column: str, analysis: Dict[str, Any]) -> pd.Series:
-        """
-        Process a single column for parallel execution
-
-        Args:
-            df: Original DataFrame
-            column: Column name
-            analysis: Analysis for the column
-
-        Returns:
-            Processed pandas Series
-        """
         series = df[column].copy()
-
-        # Handle missing values
         missing_strategy = analysis.get('missing_values', '').lower()
         if pd.isna(series).any():
             series = self._handle_missing_values_series(series, missing_strategy)
-
-        # Handle outliers
         outlier_strategy = analysis.get('outliers', '').lower()
         if pd.api.types.is_numeric_dtype(series) and not ('none' in outlier_strategy or 'keep' in outlier_strategy):
             series = self._handle_outliers_series(series, outlier_strategy)
-
-        # Apply transformations
         transformations = analysis.get('transformations', '').lower()
         if pd.api.types.is_numeric_dtype(series) and transformations:
             if 'log' in transformations:
-                # Handle zeros and negative values
                 min_val = series.min()
                 if min_val <= 0:
                     offset = abs(min_val) + 1
@@ -169,26 +93,10 @@ class DataPreprocessor:
         return series
 
     def _handle_custom_missing_values(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Detect and standardize custom missing value indicators
-
-        Args:
-            df: Original pandas DataFrame
-
-        Returns:
-            DataFrame with standardized missing values
-        """
-        # Common missing value indicators
         missing_indicators = ["?", "NA", "N/A", "NULL", "None", "unknown", "missing", "-", ""]
-
-        # Check all columns
         for column in df.columns:
-            # For string/object columns
             if df[column].dtype == 'object':
-                # Replace all indicators with NaN
                 df[column] = df[column].replace(missing_indicators, np.nan)
-
-                # Case insensitive replacement
                 if df[column].dtype == 'object':
                     for indicator in missing_indicators:
                         mask = df[column].str.lower() == indicator.lower()
@@ -197,17 +105,6 @@ class DataPreprocessor:
         return df
 
     def _convert_data_types(self, df: pd.DataFrame, column: str, analysis: Dict[str, Any]) -> pd.DataFrame:
-        """
-        Convert column to the suggested data type
-
-        Args:
-            df: Original DataFrame
-            column: Column name
-            analysis: Analysis for the column
-
-        Returns:
-            DataFrame with converted column
-        """
         data_type = analysis.get('data_type', '').lower()
 
         try:
@@ -230,21 +127,10 @@ class DataPreprocessor:
         return df
 
     def _handle_missing_values(self, df: pd.DataFrame, column: str, analysis: Dict[str, Any]) -> pd.DataFrame:
-        """
-        Handle missing values based on analysis
-
-        Args:
-            df: Original DataFrame
-            column: Column name
-            analysis: Analysis for the column
-
-        Returns:
-            DataFrame with handled missing values
-        """
         strategy = analysis.get('missing_values', '').lower()
 
         if not pd.isna(df[column]).any():
-            return df  # No missing values to handle
+            return df
 
         try:
             df[column] = self._handle_missing_values_series(df[column], strategy)
@@ -254,18 +140,7 @@ class DataPreprocessor:
         return df
 
     def _handle_missing_values_series(self, series: pd.Series, strategy: str) -> pd.Series:
-        """
-        Handle missing values in a series based on strategy
-
-        Args:
-            series: Original Series
-            strategy: Missing values handling strategy
-
-        Returns:
-            Series with handled missing values
-        """
         if 'drop' in strategy:
-            # Return series with NaN values (will be dropped later at DataFrame level)
             return series
         elif 'mean' in strategy:
             return series.fillna(series.mean())
@@ -274,7 +149,6 @@ class DataPreprocessor:
         elif 'mode' in strategy:
             return series.fillna(series.mode()[0] if not series.mode().empty else np.nan)
         elif 'constant' in strategy or 'value' in strategy:
-            # Extract the fill value from the strategy description
             import re
             match = re.search(r'value[:|=|\s]+([0-9.-]+)', strategy)
             fill_value = float(match.group(1)) if match else 0
@@ -285,24 +159,11 @@ class DataPreprocessor:
                 reshaped = series.values.reshape(-1, 1)
                 return pd.Series(imputer.fit_transform(reshaped).ravel(), index=series.index)
             else:
-                # For non-numeric, use mode imputation as fallback
                 return series.fillna(series.mode()[0] if not series.mode().empty else np.nan)
         else:
-            # Default: keep missing values
             return series
 
     def _handle_outliers(self, df: pd.DataFrame, column: str, analysis: Dict[str, Any]) -> pd.DataFrame:
-        """
-        Handle outliers based on analysis
-
-        Args:
-            df: Original DataFrame
-            column: Column name
-            analysis: Analysis for the column
-
-        Returns:
-            DataFrame with handled outliers
-        """
         outlier_strategy = analysis.get('outliers', '').lower()
 
         if not pd.api.types.is_numeric_dtype(df[column]) or 'none' in outlier_strategy or 'keep' in outlier_strategy:
@@ -316,38 +177,24 @@ class DataPreprocessor:
         return df
 
     def _handle_outliers_series(self, series: pd.Series, outlier_strategy: str) -> pd.Series:
-        """
-        Handle outliers in a series based on strategy
-
-        Args:
-            series: Original Series
-            outlier_strategy: Outlier handling strategy
-
-        Returns:
-            Series with handled outliers
-        """
         if 'isolation' in outlier_strategy or 'forest' in outlier_strategy:
-            # Use Isolation Forest
             mask_valid = ~np.isnan(series.values)
-            if mask_valid.sum() > 10:  # Need enough samples
+            if mask_valid.sum() > 10:
                 X = series.values[mask_valid].reshape(-1, 1)
                 iso_forest = IsolationForest(contamination=0.05, random_state=42)
                 iso_forest.fit(X)
                 is_outlier = iso_forest.predict(X) == -1
 
                 if 'cap' in outlier_strategy:
-                    # Get non-outlier range
                     non_outliers = X[~is_outlier].flatten()
                     if len(non_outliers) > 0:
                         lower = np.percentile(non_outliers, 5)
                         upper = np.percentile(non_outliers, 95)
-                        # Apply capping only to outliers
                         result = series.copy()
                         outlier_indices = np.where(mask_valid)[0][is_outlier]
                         result.iloc[outlier_indices] = result.iloc[outlier_indices].clip(lower, upper)
                         return result
                 elif 'remove' in outlier_strategy:
-                    # Mark outliers as NaN (will be handled by missing value methods)
                     result = series.copy()
                     outlier_indices = np.where(mask_valid)[0][is_outlier]
                     result.iloc[outlier_indices] = np.nan
@@ -361,17 +208,15 @@ class DataPreprocessor:
             upper_bound = Q3 + 1.5 * IQR
 
             if 'cap' in outlier_strategy:
-                # Cap outliers at the boundaries
                 return series.clip(lower=lower_bound, upper=upper_bound)
             elif 'remove' in outlier_strategy:
-                # Set outliers to NaN
                 result = series.copy()
                 mask = (series < lower_bound) | (series > upper_bound)
                 result[mask] = np.nan
                 return result
 
         elif 'zscore' in outlier_strategy:
-            threshold = 3.0  # Default threshold
+            threshold = 3.0
             import re
             match = re.search(r'threshold[:|=|\s]+([0-9.]+)', outlier_strategy)
             if match:
@@ -380,7 +225,6 @@ class DataPreprocessor:
             z_scores = np.abs((series - series.mean()) / series.std())
 
             if 'cap' in outlier_strategy:
-                # Replace outliers with threshold values
                 mean_val = series.mean()
                 std_val = series.std()
                 mask = z_scores > threshold
@@ -388,61 +232,32 @@ class DataPreprocessor:
                 result[mask] = np.sign(series[mask] - mean_val) * threshold * std_val + mean_val
                 return result
             elif 'remove' in outlier_strategy:
-                # Set outliers to NaN
                 result = series.copy()
                 mask = z_scores > threshold
                 result[mask] = np.nan
                 return result
-
-        # Default: return original series
         return series
 
     def _detect_anomalies(self, df: pd.DataFrame, column: str) -> pd.Series:
-        """
-        Detect anomalies using Isolation Forest
-
-        Args:
-            df: Original DataFrame
-            column: Column name
-
-        Returns:
-            Boolean Series indicating anomalies
-        """
         if not pd.api.types.is_numeric_dtype(df[column]):
             return pd.Series(False, index=df.index)
 
-        # Reshape for sklearn
         X = df[column].values.reshape(-1, 1)
 
-        # Remove NaN values for training
         mask_valid = ~np.isnan(X).ravel()
         X_valid = X[mask_valid]
 
         if len(X_valid) < 10:  # Not enough data
             return pd.Series(False, index=df.index)
 
-        # Train isolation forest
         iso_forest = IsolationForest(contamination=0.05, random_state=42)
         iso_forest.fit(X_valid)
-
-        # Predict for all values
         result = pd.Series(False, index=df.index)
         result.iloc[mask_valid] = iso_forest.predict(X_valid) == -1
 
         return result
 
     def _apply_transformations(self, df: pd.DataFrame, column: str, analysis: Dict[str, Any]) -> pd.DataFrame:
-        """
-        Apply transformations based on analysis
-
-        Args:
-            df: Original DataFrame
-            column: Column name
-            analysis: Analysis for the column
-
-        Returns:
-            DataFrame with transformations applied
-        """
         transformations = analysis.get('transformations', '').lower()
 
         if not pd.api.types.is_numeric_dtype(df[column]) or not transformations:
@@ -450,7 +265,6 @@ class DataPreprocessor:
 
         try:
             if 'log' in transformations:
-                # Handle zeros and negative values before log transform
                 if (df[column] <= 0).any():
                     min_val = df[column].min()
                     if min_val <= 0:
@@ -507,17 +321,6 @@ class DataPreprocessor:
         return df
 
     def _engineer_features(self, df: pd.DataFrame, column: str, analysis: Dict[str, Any]) -> pd.DataFrame:
-        """
-        Engineer features based on analysis
-
-        Args:
-            df: Original DataFrame
-            column: Column name
-            analysis: Analysis for the column
-
-        Returns:
-            DataFrame with engineered features
-        """
         feature_engineering = analysis.get('feature_engineering', '')
 
         if not feature_engineering:
@@ -548,28 +351,16 @@ class DataPreprocessor:
         return df
 
     def _apply_overall_recommendations(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Apply overall recommendations to the dataset
-
-        Args:
-            df: Original DataFrame
-
-        Returns:
-            DataFrame with overall recommendations applied
-        """
         recommendations = self.analysis_results.get('overall_recommendations', [])
 
         for rec in recommendations:
             rec_lower = rec.lower()
-
-            # Apply PCA if recommended
             if 'pca' in rec_lower or 'dimensionality reduction' in rec_lower:
                 try:
                     # Select only numeric columns
                     numeric_cols = df.select_dtypes(include=[np.number]).columns
-                    if len(numeric_cols) > 2:  # Only apply PCA if we have enough numeric columns
-                        components = min(len(numeric_cols) - 1, 10)  # Default to min(n-1, 10) components
-
+                    if len(numeric_cols) > 2:
+                        components = min(len(numeric_cols) - 1, 10)
                         # Extract number of components if specified
                         import re
                         match = re.search(r'components[:|=|\s]+([0-9]+)', rec_lower)
@@ -594,19 +385,7 @@ class DataPreprocessor:
         return df
 
     def _process_text_features(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Detect and process text features
-
-        Args:
-            df: Original DataFrame
-
-        Returns:
-            DataFrame with processed text features
-        """
-        # Check if GPT-5 identified text columns
         text_columns = self.analysis_results.get('special_handling', {}).get('text_columns', [])
-
-        # If GPT-5 didn't identify any, try to detect them
         if not text_columns:
             text_columns = []
             for col in df.select_dtypes(include=['object']).columns:
@@ -649,22 +428,13 @@ class DataPreprocessor:
         return df
 
     def _create_advanced_features(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Create advanced features based on existing columns
-
-        Args:
-            df: Original DataFrame
-
-        Returns:
-            DataFrame with advanced features
-        """
         try:
             # Get numeric columns
             numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
 
             if len(numeric_cols) > 1:
                 # Create ratios between important numeric columns (limit to avoid explosion)
-                important_cols = numeric_cols[:5]  # Limit to first 5 numeric columns
+                important_cols = numeric_cols[:5]
                 for i in range(len(important_cols)):
                     for j in range(i + 1, len(important_cols)):
                         col1 = important_cols[i]
@@ -683,7 +453,7 @@ class DataPreprocessor:
 
             # Extract datetime features if not already done
             for col in datetime_cols:
-                if f"{col}_year" not in df.columns:  # Check if features already created
+                if f"{col}_year" not in df.columns:  
                     df[f"{col}_year"] = df[col].dt.year
                     df[f"{col}_month"] = df[col].dt.month
                     df[f"{col}_day"] = df[col].dt.day

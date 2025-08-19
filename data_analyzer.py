@@ -8,17 +8,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 class DataAnalyzer:
     def __init__(self, api_base: str, api_key: str, model: str = "openai/gpt-5-chat-latest"):
-        """
-        Initialize the DataAnalyzer with GPT-5 integration
-
-        Args:
-            api_base: OpenAI API base URL
-            api_key: OpenAI API key
-            model: Model name
-        """
         self.chat = ChatOpenAI(
             openai_api_base=api_base,
             openai_api_key=api_key,
@@ -26,21 +17,8 @@ class DataAnalyzer:
         )
 
     def _get_data_summary(self, df: pd.DataFrame) -> str:
-        """
-        Create a summary of the dataset to send to GPT-5
-
-        Args:
-            df: Pandas DataFrame
-
-        Returns:
-            String summary of the dataset
-        """
         summary = []
-
-        # Basic info
         summary.append(f"Dataset shape: {df.shape[0]} rows, {df.shape[1]} columns")
-
-        # Column info
         for col in df.columns:
             col_type = str(df[col].dtype)
             missing = df[col].isna().sum()
@@ -56,14 +34,11 @@ class DataAnalyzer:
                 summary.append(f"Column '{col}' (type: {col_type}):")
                 summary.append(f"  - Unique values: {unique_vals}")
                 summary.append(f"  - Missing values: {missing} ({missing_pct}%)")
-                if unique_vals <= 10:  # Only show value counts for categorical columns with few unique values
+                if unique_vals <= 10:
                     summary.append(f"  - Value counts: {dict(df[col].value_counts().head(5))}")
-                # Add example values for text columns
                 if col_type == 'object' and unique_vals > 10:
                     examples = df[col].dropna().sample(min(3, len(df[col].dropna()))).tolist()
                     summary.append(f"  - Examples: {examples}")
-
-        # Add missing value patterns
         missing_patterns = self._detect_missing_patterns(df)
         if missing_patterns:
             summary.append("\nMissing Value Patterns:")
@@ -76,7 +51,6 @@ class DataAnalyzer:
                 for col1, col2, corr in missing_patterns['correlated_missing']['pairs'][:3]:  # Show top 3
                     summary.append(f"    * {col1} and {col2} (correlation: {corr:.2f})")
 
-        # Add time series detection
         time_series_info = self._detect_time_series(df)
         if time_series_info.get('is_time_series', False):
             summary.append("\nTime Series Characteristics Detected:")
@@ -86,7 +60,6 @@ class DataAnalyzer:
                 else:
                     summary.append(f"  - Column '{col}' has time data but irregular intervals")
 
-        # Add text data detection
         text_columns = self._detect_text_columns(df)
         if text_columns:
             summary.append("\nText Data Detected:")
@@ -97,25 +70,13 @@ class DataAnalyzer:
         return "\n".join(summary)
 
     def analyze_dataset(self, df: pd.DataFrame) -> Dict[str, Any]:
-        """
-        Analyze the dataset using GPT-5
-
-        Args:
-            df: Pandas DataFrame
-
-        Returns:
-            Analysis results and recommendations
-        """
-        # For large datasets, create a representative sample for analysis
         if len(df) > 10000:
             from data_loader import smart_sample
             logger.info(f"Dataset is large ({len(df)} rows). Creating a representative sample for analysis.")
             analysis_df = smart_sample(df)
         else:
             analysis_df = df
-
         data_summary = self._get_data_summary(analysis_df)
-
         system_prompt = """
         You are a data science expert. Analyze the dataset summary provided and give detailed recommendations for preprocessing.
         Focus on:
@@ -166,20 +127,16 @@ class DataAnalyzer:
             SystemMessage(content=system_prompt),
             HumanMessage(content=human_message)
         ])
-
-        # Extract and parse the JSON response
         try:
             analysis_results = json.loads(response.content)
             logger.info("Successfully parsed GPT-5 analysis response")
 
-            # Enhance with our additional analysis
             analysis_results['missing_patterns'] = self._detect_missing_patterns(df)
             analysis_results['time_series_info'] = self._detect_time_series(df)
             analysis_results['text_columns_info'] = self._detect_text_columns(df)
 
             return analysis_results
         except json.JSONDecodeError:
-            # Fallback if GPT-5 doesn't return valid JSON
             logger.error("Failed to parse GPT-5 response as JSON")
             return {
                 "error": "Failed to parse GPT-5 response as JSON",
@@ -187,19 +144,8 @@ class DataAnalyzer:
             }
 
     def _detect_missing_patterns(self, df: pd.DataFrame) -> Dict[str, Any]:
-        """
-        Detect patterns in missing values
-
-        Args:
-            df: Pandas DataFrame
-
-        Returns:
-            Dict with missing value patterns
-        """
         total_rows = len(df)
         patterns = {}
-
-        # Check for completely empty rows
         empty_rows = df.isna().all(axis=1).sum()
         if empty_rows > 0:
             patterns['empty_rows'] = {
@@ -207,8 +153,6 @@ class DataAnalyzer:
                 'percentage': round((empty_rows / total_rows) * 100, 2),
                 'recommendation': 'Consider removing completely empty rows'
             }
-
-        # Check for columns with high correlation in missing values
         missing_matrix = df.isna().astype(int)
         corr_matrix = missing_matrix.corr()
         high_corr_pairs = []
@@ -229,18 +173,8 @@ class DataAnalyzer:
         return patterns
 
     def _detect_time_series(self, df: pd.DataFrame) -> Dict[str, Any]:
-        """
-        Detect if dataset has time series characteristics
-
-        Args:
-            df: Pandas DataFrame
-
-        Returns:
-            Dict with time series information
-        """
         date_columns = []
         for col in df.columns:
-            # Check if column can be parsed as datetime
             try:
                 pd.to_datetime(df[col], errors='raise')
                 date_columns.append(col)
@@ -249,21 +183,15 @@ class DataAnalyzer:
 
         if not date_columns:
             return {'is_time_series': False}
-
-        # Check if data has consistent time intervals
         time_series_candidates = {}
 
         for col in date_columns:
             dates = pd.to_datetime(df[col])
             if dates.is_monotonic_increasing:
-                # Check intervals
                 intervals = dates.diff().dropna()
                 if len(intervals) > 0:
-                    # Get most common interval
                     most_common_interval = intervals.mode()[0]
-                    # Check consistency (>80% should have same interval)
                     consistency = (abs(intervals - most_common_interval) < pd.Timedelta('1 minute')).mean()
-
                     if consistency > 0.8:
                         time_series_candidates[col] = {
                             'interval': most_common_interval,
@@ -290,31 +218,17 @@ class DataAnalyzer:
         return {'is_time_series': False}
 
     def _detect_text_columns(self, df: pd.DataFrame) -> Dict[str, Dict[str, float]]:
-        """
-        Detect columns containing text data
-
-        Args:
-            df: Pandas DataFrame
-
-        Returns:
-            Dict with text column information
-        """
         text_columns = {}
-
         for col in df.select_dtypes(include=['object']).columns:
-            # Skip if mostly missing values
             if df[col].isna().mean() > 0.5:
                 continue
-
-            # Check average string length and word count
             avg_length = df[col].astype(str).str.len().mean()
             avg_words = df[col].astype(str).str.split().str.len().mean()
 
-            if avg_length > 50 or avg_words > 7:  # Heuristic for text data
+            if avg_length > 50 or avg_words > 7:
                 text_columns[col] = {
                     'avg_length': avg_length,
                     'avg_words': avg_words,
                     'recommendation': 'Consider text preprocessing and feature extraction'
                 }
-
         return text_columns
