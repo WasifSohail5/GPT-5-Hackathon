@@ -8,7 +8,7 @@ from sklearn.ensemble import IsolationForest
 import multiprocessing
 from joblib import Parallel, delayed
 import logging
-
+import openpyxl
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 

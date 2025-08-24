@@ -5,7 +5,7 @@ from typing import Dict, Any, List, Tuple, Optional
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
 import logging
-
+import openpyxl
 logger = logging.getLogger(__name__)
 
 class DataAnalyzer:

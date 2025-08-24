@@ -1,0 +1,488 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Data Analysis Report</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
+            .container { max-width: 1200px; margin: 0 auto; }
+            .header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+            .section { margin-bottom: 40px; }
+            .viz-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+            .viz-card { border: 1px solid #ddd; border-radius: 5px; padding: 15px; }
+            .viz-img { width: 100%; height: auto; margin-bottom: 10px; }
+            .viz-title { font-size: 16px; font-weight: bold; margin-bottom: 5px; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+            th { background-color: #f2f2f2; }
+            .stat-card { background-color: #f8f9fa; border-radius: 5px; padding: 15px; margin-bottom: 15px; }
+            .tab-content { padding: 20px; border: 1px solid #dee2e6; border-top: none; }
+            .corr-heatmap { width: 100%; overflow-x: auto; }
+            .corr-table { font-size: 12px; }
+            .missing-chart { width: 100%; height: 20px; background-color: #f8f9fa; margin-bottom: 5px; position: relative; }
+            .missing-value { background-color: #dc3545; height: 100%; position: absolute; left: 0; top: 0; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Data Analysis Report</h1>
+                <p class="text-muted">Generated on 2025-08-24 19:23:55</p>
+            </div>
+
+            <div class="section">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h2>Dataset Overview</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="stat-card">
+                                    <h4>Basic Information</h4>
+                                    <table class="table">
+                                        <tr>
+                                            <th>Rows:</th>
+                                            <td>30</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Columns:</th>
+                                            <td>7</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Numeric Columns:</th>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Categorical Columns:</th>
+                                            <td>4</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="stat-card">
+                                    <h4>Missing Values</h4>
+                                    
+                                    <p>No missing values found in the dataset.</p>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h2>Column Analysis</h2>
+                    </div>
+                    <div class="card-body">
+                        <ul class="nav nav-tabs" id="columnTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="numeric-tab" data-bs-toggle="tab" data-bs-target="#numeric" type="button" role="tab">Numeric Columns</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="categorical-tab" data-bs-toggle="tab" data-bs-target="#categorical" type="button" role="tab">Categorical Columns</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="columnTabsContent">
+                            <div class="tab-pane fade show active" id="numeric" role="tabpanel">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Column</th>
+                                                <th>Min</th>
+                                                <th>Max</th>
+                                                <th>Mean</th>
+                                                <th>Median</th>
+                                                <th>Std Dev</th>
+                                                <th>Missing</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+                                            <tr>
+                                                <td>sales</td>
+                                                <td>60.00</td>
+                                                <td>2200.00</td>
+                                                <td>555.67</td>
+                                                <td>350.00</td>
+                                                <td>539.11</td>
+                                                <td>0.0%</td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td>units_sold</td>
+                                                <td>1.00</td>
+                                                <td>6.00</td>
+                                                <td>2.57</td>
+                                                <td>2.00</td>
+                                                <td>1.38</td>
+                                                <td>0.0%</td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td>customer_age</td>
+                                                <td>22.00</td>
+                                                <td>47.00</td>
+                                                <td>34.20</td>
+                                                <td>33.50</td>
+                                                <td>6.76</td>
+                                                <td>0.0%</td>
+                                            </tr>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="categorical" role="tabpanel">
+                                <div class="row">
+                                    
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5>date</h5>
+                                                <div class="small text-muted">
+                                                    30 unique values | 
+                                                    0.0% missing
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <table class="table table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Value</th>
+                                                            <th>Count</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        
+                                                        <tr>
+                                                            <td>2023-01-01</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>2023-01-02</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>2023-01-29</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>2023-01-28</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>2023-01-27</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>2023-01-26</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>2023-01-25</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>2023-01-24</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>2023-01-23</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>2023-01-22</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5>product</h5>
+                                                <div class="small text-muted">
+                                                    30 unique values | 
+                                                    0.0% missing
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <table class="table table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Value</th>
+                                                            <th>Count</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        
+                                                        <tr>
+                                                            <td>Laptop</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>Phone</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>Router</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>Dresser</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>Printer</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>Lamp</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>TV</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>Dining Table</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>External Drive</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>Vacuum</td>
+                                                            <td>1</td>
+                                                        </tr>
+                                                        
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5>category</h5>
+                                                <div class="small text-muted">
+                                                    3 unique values | 
+                                                    0.0% missing
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <table class="table table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Value</th>
+                                                            <th>Count</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        
+                                                        <tr>
+                                                            <td>Electronics</td>
+                                                            <td>15</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>Furniture</td>
+                                                            <td>8</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>Home</td>
+                                                            <td>7</td>
+                                                        </tr>
+                                                        
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5>region</h5>
+                                                <div class="small text-muted">
+                                                    4 unique values | 
+                                                    0.0% missing
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <table class="table table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Value</th>
+                                                            <th>Count</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        
+                                                        <tr>
+                                                            <td>North</td>
+                                                            <td>8</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>South</td>
+                                                            <td>8</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>East</td>
+                                                            <td>7</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td>West</td>
+                                                            <td>7</td>
+                                                        </tr>
+                                                        
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="section">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h2>Correlation Analysis</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="corr-heatmap">
+                            <table class="table table-bordered corr-table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        
+                                        <th>sales</th>
+                                        
+                                        <th>units_sold</th>
+                                        
+                                        <th>customer_age</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    <tr>
+                                        <th>sales</th>
+                                        
+                                        <td style="background-color: rgba(0.0, 255.0, 255, 0.7);">
+                                            1.00
+                                        </td>
+                                        
+                                        <td style="background-color: rgba(190.8970993829895, 64.10290061701049, 255, 0.7);">
+                                            -0.50
+                                        </td>
+                                        
+                                        <td style="background-color: rgba(140.41767320145894, 114.58232679854108, 255, 0.7);">
+                                            -0.10
+                                        </td>
+                                        
+                                    </tr>
+                                    
+                                    <tr>
+                                        <th>units_sold</th>
+                                        
+                                        <td style="background-color: rgba(190.8970993829895, 64.10290061701049, 255, 0.7);">
+                                            -0.50
+                                        </td>
+                                        
+                                        <td style="background-color: rgba(0.0, 255.0, 255, 0.7);">
+                                            1.00
+                                        </td>
+                                        
+                                        <td style="background-color: rgba(199.66201042474583, 55.33798957525417, 255, 0.7);">
+                                            -0.57
+                                        </td>
+                                        
+                                    </tr>
+                                    
+                                    <tr>
+                                        <th>customer_age</th>
+                                        
+                                        <td style="background-color: rgba(140.41767320145894, 114.58232679854108, 255, 0.7);">
+                                            -0.10
+                                        </td>
+                                        
+                                        <td style="background-color: rgba(199.66201042474583, 55.33798957525417, 255, 0.7);">
+                                            -0.57
+                                        </td>
+                                        
+                                        <td style="background-color: rgba(0.0, 255.0, 255, 0.7);">
+                                            1.00
+                                        </td>
+                                        
+                                    </tr>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+            <div class="section">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h2>Data Visualizations</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="viz-gallery">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+    </html>
+    

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Science Agent</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <style>
+        body { padding: 20px; }
+        .container { max-width: 1000px; }
+        .progress { margin: 20px 0; height: 20px; }
+        #status-container { display: none; }
+        #results-container { display: none; }
+        #log-container { 
+            height: 300px; 
+            overflow-y: auto; 
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            font-family: monospace;
+            margin-bottom: 20px;
+            color: #212529;
+        }
+        .log-info { color: #0d6efd; }
+        .log-error { color: #dc3545; }
+        .log-warning { color: #ffc107; }
+        .tab-content {
+            border: 1px solid #dee2e6;
+            border-top: none;
+            padding: 15px;
+        }
+        .nav-tabs {
+            margin-bottom: 0;
+        }
+        .summary-box {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .comparison-stat {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        .step-info {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4">Advanced Data Science Agent</h1>
+        <p class="lead">Upload a CSV or Excel file to analyze and preprocess with GPT-5 and advanced techniques</p>
+
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Upload Dataset</h5>
+            </div>
+            <div class="card-body">
+                <form id="upload-form">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Select CSV or Excel file</label>
+                        <input type="file" class="form-control" id="file" name="file" accept=".csv,.xlsx,.xls">
+                    </div>
+                    <div class="mb-3">
+                        <label for="api-key" class="form-label">API Key (optional)</label>
+                        <input type="text" class="form-control" id="api-key" name="api_key" placeholder="Enter your GPT-5 API key">
+                        <div class="form-text">If not provided, the default API key will be used.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload & Process</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="status-container" class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Processing Status</h5>
+            </div>
+            <div class="card-body">
+                <p id="status-message" class="fw-bold">Processing...</p>
+                <div class="progress">
+                    <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                </div>
+
+                <h5 class="mt-4 mb-2">Real-time Processing Logs:</h5>
+                <div id="log-container"></div>
+            </div>
+        </div>
+
+        <div id="results-container" class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Results</h5>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs" id="resultTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="summary-tab" data-bs-toggle="tab" data-bs-target="#summary" type="button" role="tab">Summary</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="downloads-tab" data-bs-toggle="tab" data-bs-target="#downloads" type="button" role="tab">Downloads</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="logs-tab" data-bs-toggle="tab" data-bs-target="#logs" type="button" role="tab">Full Logs</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="resultTabsContent">
+                    <div class="tab-pane fade show active" id="summary" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="summary-box">
+                                    <h5>Dataset Transformation</h5>
+                                    <div id="shape-comparison" class="comparison-stat"></div>
+                                    <div id="missing-comparison" class="comparison-stat"></div>
+                                    <div id="quality-score" class="comparison-stat"></div>
+                                    <div id="columns-added" class="mt-3"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="summary-box">
+                                    <h5>Preprocessing Steps Applied</h5>
+                                    <div id="preprocessing-steps"></div>
+                                </div>
+
+                                <div class="summary-box mt-3">
+                                    <h5>GPT-5 Recommendations</h5>
+                                    <div id="top-recommendations"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="downloads" role="tabpanel">
+                        <p class="mb-4">Download results and view the detailed report:</p>
+                        <div class="list-group">
+                            <a id="download-dataset" href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>Download Processed Dataset</strong>
+                                    <div class="small text-muted">Get the fully preprocessed dataset ready for machine learning</div>
+                                </div>
+                                <span class="badge bg-primary rounded-pill">CSV/Excel</span>
+                            </a>
+                            <a id="download-analysis" href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>Download GPT-5 Analysis</strong>
+                                    <div class="small text-muted">Detailed analysis results in JSON format</div>
+                                </div>
+                                <span class="badge bg-info rounded-pill">JSON</span>
+                            </a>
+                            <a id="view-report" href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" target="_blank">
+                                <div>
+                                    <strong>View Interactive HTML Report</strong>
+                                    <div class="small text-muted">Visual comparison of before and after preprocessing</div>
+                                </div>
+                                <span class="badge bg-success rounded-pill">HTML</span>
+                            </a>
+                            <a id="download-report" href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>Download HTML Report</strong>
+                                    <div class="small text-muted">Save the detailed report for later</div>
+                                </div>
+                                <span class="badge bg-success rounded-pill">HTML</span>
+                            </a>
+                            <a id="download-logs" href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>Download Processing Logs</strong>
+                                    <div class="small text-muted">Complete log of all preprocessing steps</div>
+                                </div>
+                                <span class="badge bg-secondary rounded-pill">TXT</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="logs" role="tabpanel">
+                        <div id="full-log-container" style="white-space: pre-wrap; font-family: monospace; max-height: 500px; overflow-y: auto;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentJobId = null;
+        let statusCheckInterval = null;
+        let ws = null;
+
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData();
+            const fileInput = document.getElementById('file');
+            const apiKeyInput = document.getElementById('api-key');
+
+            if (!fileInput.files[0]) {
+                alert('Please select a file to upload');
+                return;
+            }
+
+            formData.append('file', fileInput.files[0]);
+            if (apiKeyInput.value) {
+                formData.append('api_key', apiKeyInput.value);
+            }
+
+            // Show status container
+            document.getElementById('status-container').style.display = 'block';
+            document.getElementById('results-container').style.display = 'none';
+            document.getElementById('status-message').textContent = 'Uploading file...';
+            document.getElementById('progress-bar').style.width = '5%';
+            document.getElementById('log-container').innerHTML = '';
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.job_id) {
+                    currentJobId = data.job_id;
+                    document.getElementById('status-message').textContent = data.message;
+
+                    // Start WebSocket connection
+                    connectWebSocket();
+
+                    // Also start polling as fallback
+                    clearInterval(statusCheckInterval);
+                    statusCheckInterval = setInterval(checkJobStatus, 2000);
+                }
+            } catch (error) {
+                document.getElementById('status-message').textContent = `Error: ${error.message}`;
+            }
+        });
+
+        function connectWebSocket() {
+            if (!currentJobId) return;
+
+            // Close existing connection if any
+            if (ws) {
+                ws.close();
+            }
+
+            // Create new WebSocket connection
+            ws = new WebSocket(`${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws/${currentJobId}`);
+
+            ws.onopen = function(e) {
+                console.log("WebSocket connection established");
+                addLogMessage("WebSocket connection established");
+
+                // Keep connection alive with ping-pong
+                setInterval(() => {
+                    if (ws.readyState === WebSocket.OPEN) {
+                        ws.send("ping");
+                    }
+                }, 30000);
+            };
+
+            ws.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+
+                if (data.type === "status") {
+                    // Update status display
+                    document.getElementById('status-message').textContent = data.message;
+                    document.getElementById('progress-bar').style.width = `${data.progress}%`;
+
+                    // If job is completed or has error
+                    if (data.status === 'completed') {
+                        clearInterval(statusCheckInterval);
+                        getJobResults();
+
+                        // Change progress bar color to success
+                        document.getElementById('progress-bar').classList.remove('bg-info');
+                        document.getElementById('progress-bar').classList.add('bg-success');
+                    } else if (data.status === 'error') {
+                        clearInterval(statusCheckInterval);
+                        document.getElementById('progress-bar').classList.remove('bg-info');
+                        document.getElementById('progress-bar').classList.add('bg-danger');
+                    }
+                } else if (data.type === "log") {
+                    addLogMessage(data.message);
+                }
+            };
+
+            ws.onclose = function(event) {
+                if (!event.wasClean) {
+                    console.log(`WebSocket connection closed unexpectedly, code=${event.code}`);
+                    // Fallback to polling
+                    clearInterval(statusCheckInterval);
+                    statusCheckInterval = setInterval(checkJobStatus, 2000);
+                }
+            };
+
+            ws.onerror = function(error) {
+                console.error(`WebSocket error: ${error.message}`);
+            };
+        }
+
+        function addLogMessage(message) {
+            const logContainer = document.getElementById('log-container');
+            const logElement = document.createElement('div');
+
+            // Simple formatting for different log levels
+            if (message.includes('ERROR')) {
+                logElement.className = 'log-error';
+            } else if (message.includes('WARNING')) {
+                logElement.className = 'log-warning';
+            } else {
+                logElement.className = 'log-info';
+            }
+
+            logElement.textContent = message;
+            logContainer.appendChild(logElement);
+
+            // Scroll to bottom
+            logContainer.scrollTop = logContainer.scrollHeight;
+
+            // Also add to full logs tab
+            const fullLogContainer = document.getElementById('full-log-container');
+            if (fullLogContainer) {
+                fullLogContainer.textContent += message + '\n';
+            }
+        }
+
+        async function checkJobStatus() {
+            if (!currentJobId) return;
+
+            try {
+                const response = await fetch(`/status/${currentJobId}`);
+                const data = await response.json();
+
+                // Update status display
+                document.getElementById('status-message').textContent = data.message;
+                document.getElementById('progress-bar').style.width = `${data.progress}%`;
+
+                // If job is completed or has error
+                if (data.status === 'completed') {
+                    clearInterval(statusCheckInterval);
+                    getJobResults();
+
+                    // Change progress bar color to success
+                    document.getElementById('progress-bar').classList.remove('bg-info');
+                    document.getElementById('progress-bar').classList.add('bg-success');
+                } else if (data.status === 'error') {
+                    clearInterval(statusCheckInterval);
+                    document.getElementById('progress-bar').classList.remove('bg-info');
+                    document.getElementById('progress-bar').classList.add('bg-danger');
+                }
+
+                // Get logs if we don't have WebSocket
+                if (!ws || ws.readyState !== WebSocket.OPEN) {
+                    const logsResponse = await fetch(`/logs/${currentJobId}`);
+                    const logsData = await logsResponse.json();
+
+                    const logContainer = document.getElementById('log-container');
+                    logContainer.innerHTML = '';
+
+                    logsData.logs.forEach(log => {
+                        addLogMessage(log);
+                    });
+                }
+            } catch (error) {
+                console.error(`Error checking status: ${error.message}`);
+            }
+        }
+
+        async function getJobResults() {
+            if (!currentJobId) return;
+
+            try {
+                const response = await fetch(`/results/${currentJobId}`);
+                const data = await response.json();
+
+                if (data.status === 'completed') {
+                    // Show results container
+                    document.getElementById('results-container').style.display = 'block';
+
+                    // Set download links
+                    document.getElementById('download-dataset').href = `/download/${currentJobId}/dataset`;
+                    document.getElementById('download-analysis').href = `/download/${currentJobId}/analysis`;
+                    document.getElementById('download-report').href = `/download/${currentJobId}/report`;
+                    document.getElementById('download-logs').href = `/download/${currentJobId}/logs`;
+                    document.getElementById('view-report').href = `/report/${currentJobId}`;
+
+                    // Populate summary
+                    const summary = data.summary;
+
+                    // Dataset shape comparison
+                    document.getElementById('shape-comparison').innerHTML = `
+                        <strong>Rows:</strong> ${summary.original_shape.rows} → ${summary.processed_shape.rows}<br>
+                        <strong>Columns:</strong> ${summary.original_shape.columns} → ${summary.processed_shape.columns}
+                        <div class="progress mt-1" style="height: 10px;">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: ${(summary.original_shape.columns / summary.processed_shape.columns) * 100}%" 
+                                aria-valuenow="${summary.original_shape.columns}" aria-valuemin="0" aria-valuemax="${summary.processed_shape.columns}"></div>
+                        </div>
+                    `;
+
+                    // Missing values comparison
+                    const missingReduction = summary.missing_values_before - summary.missing_values_after;
+                    const missingPct = summary.missing_values_before > 0 
+                        ? (missingReduction / summary.missing_values_before * 100).toFixed(1) 
+                        : 0;
+
+                    document.getElementById('missing-comparison').innerHTML = `
+                        <strong>Missing Values:</strong> ${summary.missing_values_before} → ${summary.missing_values_after} 
+                        (${missingPct}% reduction)
+                    `;
+
+                    // Quality score
+                    document.getElementById('quality-score').innerHTML = `
+                        <strong>Dataset Quality Score:</strong> ${summary.quality_score}/10
+                    `;
+
+                    // Columns added
+                    let columnsHtml = `<strong>New Features Added:</strong> ${summary.columns_added.length}`;
+                    if (summary.columns_added.length > 0) {
+                        columnsHtml += '<ul class="mt-1 mb-0">';
+                        summary.columns_added.slice(0, 5).forEach(col => {
+                            columnsHtml += `<li>${col}</li>`;
+                        });
+                        if (summary.columns_added.length > 5) {
+                            columnsHtml += `<li>... and ${summary.columns_added.length - 5} more</li>`;
+                        }
+                        columnsHtml += '</ul>';
+                    }
+                    document.getElementById('columns-added').innerHTML = columnsHtml;
+
+                    // Preprocessing steps
+                    let stepsHtml = '';
+                    summary.preprocessing_steps.forEach((step, index) => {
+                        stepsHtml += `<div class="step-info"><strong>${index + 1}.</strong> ${step}</div>`;
+                    });
+                    document.getElementById('preprocessing-steps').innerHTML = stepsHtml;
+
+                    // Top recommendations
+                    let recsHtml = '';
+                    if (summary.top_recommendations && summary.top_recommendations.length > 0) {
+                        summary.top_recommendations.forEach((rec, index) => {
+                            recsHtml += `<div class="step-info"><strong>${index + 1}.</strong> ${rec}</div>`;
+                        });
+                    }
+                    document.getElementById('top-recommendations').innerHTML = recsHtml;
+                }
+            } catch (error) {
+                document.getElementById('status-message').textContent = `Error getting results: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

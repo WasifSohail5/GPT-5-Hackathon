@@ -3,9 +3,9 @@ import numpy as np
 import os
 from typing import Dict, Any, Optional
 import logging
-
+import openpyxl as xl
 logger = logging.getLogger(__name__)
-
+import xlrd
 def load_dataset(file_path: str) -> Dict[str, Any]:
     file_extension = os.path.splitext(file_path)[1].lower()
 
@@ -13,9 +13,10 @@ def load_dataset(file_path: str) -> Dict[str, Any]:
         if file_extension == '.csv':
             df = pd.read_csv(file_path)
             file_type = 'CSV'
-        elif file_extension in ['.xlsx', '.xls']:
-            df = pd.read_excel(file_path)
-            file_type = 'Excel'
+        elif file_extension == ".xlsx":
+            df = pd.read_excel(file_path, engine="openpyxl")
+        elif file_extension == ".xls":
+            df = pd.read_excel(file_path, engine="xlrd")
         else:
             raise ValueError(f"Unsupported file format: {file_extension}. Please provide CSV or Excel file.")
         df = standardize_missing_values(df)
