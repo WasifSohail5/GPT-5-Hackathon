@@ -1,4 +1,6 @@
-# DataFlow Pro AI 🚀
+# DataFlow AI 🚀
+
+<div align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Next.js](https://img.shields.io/badge/Next.js-13.x-black)](https://nextjs.org/)
@@ -6,156 +8,311 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.103.1-009688)](https://fastapi.tiangolo.com/)
 [![Python](https://img.shields.io/badge/Python-3.9+-3776AB)](https://www.python.org/)
 
+**Transform raw data into actionable insights with AI-powered analytics**
+
+[🚀 Live Demo](https://your-demo-link.com) • [📖 Documentation](https://github.com/WasifSohail5/DataFlow-AI) • [🐛 Report Bug](https://github.com/WasifSohail5/DataFlow-AI/issues)
+
+</div>
+
+---
+
 ## 🌟 Overview
 
-DataFlow Pro AI is a comprehensive data analysis and visualization platform built for the GPT-5 Hackathon. This powerful tool helps users transform raw data into actionable insights through automated visualizations, statistical analysis, and interactive dashboards.
+**DataFlow AI** is an enterprise-grade data analysis and visualization platform that empowers businesses and data professionals to make data-driven decisions faster. Leverage the power of artificial intelligence to automatically generate insights, create stunning visualizations, and interact with your data through natural language.
 
-![DataFlow Pro AI Dashboard](https://via.placeholder.com/800x400?text=DataFlow+Pro+AI+Dashboard)
+<div align="center">
+  <img src="https://via.placeholder.com/800x450?text=DataFlow+Pro+AI+Dashboard" alt="DataFlow Pro AI Dashboard" />
+</div>
 
-## ✨ Features
+---
 
-- **📊 Data Visualization Module** - Generate beautiful, interactive visualizations from CSV and Excel files
-- **🤖 AI Chatbot** - Get instant assistance and data insights through natural language queries
-- **📈 Data Science Tools** - Apply advanced analytics and statistical methods to your datasets
-- **📱 Responsive Dashboard** - Access all features through an intuitive, mobile-friendly interface
-- **🎨 Customizable Themes** - Choose between light and dark modes for comfortable viewing
+## ✨ Key Features
 
-## 🛠️ Technologies
+<table>
+<tr>
+<td width="50%">
+
+### 📊 Smart Visualizations
+- **Automatic Chart Generation** - AI selects the best visualization for your data
+- **Interactive Dashboards** - Drill down into your data with dynamic filters
+- **Multiple Chart Types** - Line, Bar, Scatter, Heatmap, and more
+- **Export Options** - Save as PNG, SVG, or PDF
+
+</td>
+<td width="50%">
+
+### 🤖 AI-Powered Chatbot
+- **Natural Language Queries** - Ask questions in plain English
+- **Instant Insights** - Get statistical summaries on demand
+- **Code Generation** - Generate Python/SQL code for analysis
+- **Context-Aware** - Understands your data structure
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 📈 Advanced Analytics
+- **Correlation Analysis** - Discover relationships in your data
+- **Statistical Testing** - Hypothesis testing and p-values
+- **Outlier Detection** - Identify anomalies automatically
+- **Time Series Analysis** - Trend detection and forecasting
+
+</td>
+<td width="50%">
+
+### 🎨 Modern Interface
+- **Responsive Design** - Works on desktop, tablet, and mobile
+- **Dark/Light Themes** - Comfortable viewing in any environment
+- **Drag & Drop** - Easy file uploads
+- **Real-time Updates** - See changes instantly
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🛠️ Technology Stack
+
+<div align="center">
 
 ### Frontend
-- **Next.js** - React framework for server-side rendering and static generation
-- **React** - UI component library
-- **Tailwind CSS** - Utility-first CSS framework
-- **TypeScript** - Type-safe JavaScript
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
 ### Backend
-- **FastAPI** - Modern, high-performance web framework for building APIs
-- **Python** - Backend programming language
-- **Pandas** - Data manipulation and analysis
-- **Matplotlib/Seaborn** - Data visualization libraries
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white)
+![NumPy](https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white)
 
-## 🚀 Getting Started
+</div>
+
+---
+
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- Node.js (v16+)
-- Python (v3.9+)
-- npm or yarn
+Before you begin, ensure you have the following installed:
+- **Node.js** (v16 or higher) - [Download](https://nodejs.org/)
+- **Python** (v3.9 or higher) - [Download](https://www.python.org/)
+- **npm** or **yarn** package manager
 
 ### Installation
 
-#### Frontend Setup
+#### 1️⃣ Clone the Repository
 ```bash
-# Clone the repository
-git clone https://github.com/WasifSohail5/GPT-5-Hackathon.git
-cd GPT-5-Hackathon
+git clone https://github.com/WasifSohail5/DataFlow-AI.git
+cd DataFlow-AI
+```
 
+#### 2️⃣ Frontend Setup
+```bash
 # Install dependencies
 npm install
 # or
 yarn install
 
-# Create .env.local file with required environment variables
+# Create environment file
 cp .env.example .env.local
+
+# Configure your environment variables
+# Edit .env.local with your API keys and configuration
 ```
 
-#### Backend Setup
+#### 3️⃣ Backend Setup
 ```bash
 # Navigate to backend directory
 cd backend
 
-# Create and activate virtual environment
+# Create virtual environment
 python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-# Install dependencies
+# Activate virtual environment
+# On Windows:
+.venv\Scripts\activate
+# On macOS/Linux:
+source .venv/bin/activate
+
+# Install Python dependencies
 pip install -r requirements.txt
 ```
 
 ### Running the Application
 
-#### Start the Backend Server
+#### Start Backend Server 🔧
 ```bash
 cd backend
 uvicorn main:app --host 0.0.0.0 --port 8004 --reload
 ```
+Backend will be available at `http://localhost:8004`
 
-#### Start the Frontend Development Server
+#### Start Frontend Server 🎨
 ```bash
-# In a new terminal
+# In a new terminal window
 npm run dev
 # or
 yarn dev
 ```
+Frontend will be available at `http://localhost:3000`
 
-The application will be available at [http://localhost:3000](http://localhost:3000)
+---
 
-## 📋 Modules
+## 📋 Core Modules
 
-### Report Generator
-- Automated data visualization generation
-- Statistical analysis summary
-- Export reports as PDF/HTML
-- Interactive charts and graphs
+### 🎯 Report Generator
+Transform your data into professional reports with:
+- Automated visualization generation based on data types
+- Statistical analysis summaries (mean, median, mode, std dev)
+- Export functionality (PDF, HTML, Excel)
+- Customizable report templates
+- Schedule automated reports
 
-### Data Science Module
-- Correlation analysis
-- Descriptive statistics
-- Outlier detection
-- Time series analysis
+### 🔬 Data Science Toolkit
+Advanced analytics at your fingertips:
+- **Descriptive Statistics** - Comprehensive data summaries
+- **Correlation Matrix** - Identify relationships between variables
+- **Distribution Analysis** - Understand data spread and patterns
+- **Outlier Detection** - Flag unusual data points
+- **Missing Data Analysis** - Identify and handle missing values
+- **Feature Engineering** - Create new derived features
 
-### AI Chatbot
-- Natural language queries about your data
-- Interactive assistance
-- Code generation for custom analysis
-- Export conversations for documentation
+### 💬 AI Assistant
+Your intelligent data analyst:
+- Natural language understanding
+- Context-aware responses
+- Query suggestions based on your data
+- Export conversation history
+- Multi-language support
+- Custom prompt engineering
+
+---
 
 ## 📸 Screenshots
 
-### Landing Page
-![Landing Page](https://via.placeholder.com/800x400?text=Landing+Page)
+<div align="center">
 
-### Data Visualization Dashboard
-![Visualization Dashboard](https://via.placeholder.com/800x400?text=Data+Visualization+Dashboard)
+### 🏠 Dashboard Overview
+<img src="https://via.placeholder.com/900x500?text=Interactive+Dashboard+with+Real-time+Analytics" alt="Dashboard" />
 
-### AI Chatbot Interface
-![AI Chatbot](https://via.placeholder.com/800x400?text=AI+Chatbot+Interface)
+### 📊 Visualization Studio
+<img src="https://via.placeholder.com/900x500?text=Create+Stunning+Visualizations+with+One+Click" alt="Visualizations" />
 
-## 🔄 Workflow
+### 🤖 AI Chat Interface
+<img src="https://via.placeholder.com/900x500?text=Ask+Questions+About+Your+Data+in+Natural+Language" alt="AI Chatbot" />
 
-1. **Upload Data** - Upload CSV or Excel files through the intuitive interface
-2. **Generate Visualizations** - Automatically create relevant visualizations based on your data
-3. **Explore Insights** - Interact with charts and graphs to discover patterns and trends
-4. **Ask Questions** - Use the AI chatbot to ask questions about your data in natural language
-5. **Export Results** - Save visualizations and reports for sharing and presentation
+</div>
+
+---
+
+## 🔄 Typical Workflow
+
+```mermaid
+graph LR
+    A[📁 Upload Data] --> B[🔍 Auto Analysis]
+    B --> C[📊 Generate Visualizations]
+    C --> D[💬 Ask AI Questions]
+    D --> E[📈 Explore Insights]
+    E --> F[📄 Export Reports]
+    F --> G[✅ Share Results]
+```
+
+1. **📁 Upload Your Data** - Support for CSV, Excel, JSON, and SQL databases
+2. **🔍 Automatic Analysis** - AI analyzes your data structure and suggests visualizations
+3. **📊 Create Visualizations** - Generate charts with a single click
+4. **💬 Interact with AI** - Ask questions and get instant answers
+5. **📈 Discover Insights** - Explore patterns, trends, and anomalies
+6. **📄 Generate Reports** - Create professional reports with your findings
+7. **✅ Share & Collaborate** - Export and share with your team
+
+---
+
+## 🎯 Use Cases
+
+- **📊 Business Intelligence** - Track KPIs and business metrics
+- **🔬 Research & Academia** - Analyze experimental data
+- **💰 Financial Analysis** - Portfolio analysis and risk assessment
+- **📈 Marketing Analytics** - Campaign performance and customer insights
+- **🏥 Healthcare** - Patient data analysis and trends
+- **🌐 E-commerce** - Sales trends and customer behavior
+
+---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+### How to Contribute
+
+1. **Fork** the repository
+2. Create your **Feature Branch** (`git checkout -b feature/AmazingFeature`)
+3. **Commit** your changes (`git commit -m 'Add some AmazingFeature'`)
+4. **Push** to the branch (`git push origin feature/AmazingFeature`)
+5. Open a **Pull Request**
+
+### Development Guidelines
+
+- Follow existing code style and conventions
+- Write clear commit messages
+- Add tests for new features
+- Update documentation as needed
+- Ensure all tests pass before submitting PR
+
+---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+---
 
 ## 👨‍💻 Author
 
-- **Wasif Sohail** - [GitHub Profile](https://github.com/WasifSohail5)
+<div align="center">
+
+### Wasif Sohail
+
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Wasif-Sohail55)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/wasif-sohail)
+[![Portfolio](https://img.shields.io/badge/Portfolio-255E63?style=for-the-badge&logo=About.me&logoColor=white)](https://your-portfolio.com)
+
+</div>
+
+---
 
 ## 🙏 Acknowledgements
 
-- [Next.js Documentation](https://nextjs.org/docs)
-- [FastAPI Documentation](https://fastapi.tiangolo.com/)
-- [React Documentation](https://reactjs.org/docs/getting-started.html)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+Special thanks to these amazing projects and resources:
+
+- [Next.js](https://nextjs.org/) - The React Framework for Production
+- [FastAPI](https://fastapi.tiangolo.com/) - Modern Python Web Framework
+- [React](https://reactjs.org/) - JavaScript Library for Building UIs
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-First CSS Framework
+- [Pandas](https://pandas.pydata.org/) - Python Data Analysis Library
+- [Matplotlib](https://matplotlib.org/) & [Seaborn](https://seaborn.pydata.org/) - Data Visualization
+
+---
+
+## 📞 Support
+
+If you have any questions or need help getting started, feel free to:
+
+- 📧 **Email**: wasif.sohail@example.com
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/WasifSohail5/DataFlow-AI/discussions)
+- 🐛 **Issues**: [Report a Bug](https://github.com/WasifSohail5/DataFlow-AI/issues)
 
 ---
 
 <div align="center">
-  <p>Built with ❤️ for the GPT-5 Hackathon</p>
+
+### ⭐ Star this repository if you find it helpful!
+
+**Built with ❤️ by Wasif Sohail**
+
+![Visitors](https://api.visitorbadge.io/api/visitors?path=WasifSohail5%2FDataFlow-AI&label=Visitors&countColor=%23263759)
+
 </div>
