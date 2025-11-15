@@ -21,7 +21,7 @@
 **DataFlow AI** is an enterprise-grade data analysis and visualization platform that empowers businesses and data professionals to make data-driven decisions faster. Leverage the power of artificial intelligence to automatically generate insights, create stunning visualizations, and interact with your data through natural language.
 
 <div align="center">
-  <img src="https://via.placeholder.com/800x450?text=DataFlow+AI+Dashboard" alt="DataFlow AI Dashboard" />
+  <img src="./screenshots/dashboard_1.png" alt="DataFlow AI Dashboard" width="800"/>
 </div>
 
 ---
@@ -192,18 +192,39 @@ Your intelligent data analyst:
 
 ---
 
-## 📸 Screenshots
+## 📸 Screenshots & Visualizations
 
 <div align="center">
 
 ### 🏠 Dashboard Overview
-<img src="https://via.placeholder.com/900x500?text=Interactive+Dashboard+with+Real-time+Analytics" alt="Dashboard" />
+<img src="./screenshots/dashboard_2.png" alt="Main Dashboard" width="900"/>
 
-### 📊 Visualization Studio
-<img src="https://via.placeholder.com/900x500?text=Create+Stunning+Visualizations+with+One+Click" alt="Visualizations" />
+### 📊 Data Visualization Examples
+
+<table>
+<tr>
+<td width="50%">
+<img src="./Visualizations/Bar_Plots.png" alt="Bar Plots" width="100%"/>
+</td>
+<td width="50%">
+<img src="./Visualizations/Dist_Plots_Cats.png" alt="Visualization 2" width="100%"/>
+</td>
+</tr>
+<tr>
+<td width="50%">
+<img src="./Visualizations/Dist_PLots_Numeric.png" alt="Visualization 3" width="100%"/>
+</td>
+<td width="50%">
+<img src="./Visualizations/Heat_Maps.png" alt="Visualization 4" width="100%"/>
+</td>
+</tr>
+</table>
 
 ### 🤖 AI Chat Interface
-<img src="https://via.placeholder.com/900x500?text=Ask+Questions+About+Your+Data+in+Natural+Language" alt="AI Chatbot" />
+<img src="./screenshots/chatbot.png" alt="AI Chatbot Interface" width="900"/>
+
+### 📈 Analytics Dashboard
+<img src="./screenshots/analytics.png" alt="Analytics Dashboard" width="900"/>
 
 </div>
 
@@ -270,7 +291,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ---
 
-## 👨‍💻 Author
+## 👨‍�� Author
 
 <div align="center">
 
