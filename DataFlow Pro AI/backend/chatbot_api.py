@@ -47,9 +47,9 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory="visualizations"), name="static")
 
 # Global settings
-API_KEY = os.getenv("GPT5_API_KEY", "361a27a60f6b4138982fd15278917fed")
-BASE_URL = os.getenv("GPT5_API_BASE", "https://api.aimlapi.com/v1")
-MODEL = os.getenv("GPT5_MODEL", "openai/gpt-5-chat-latest")
+API_KEY = os.getenv("GPT5_API_KEY", "")
+BASE_URL = os.getenv("GPT5_API_BASE", "")
+MODEL = os.getenv("GPT5_MODEL", "")
 
 # Sessions storage
 SESSIONS = {}
