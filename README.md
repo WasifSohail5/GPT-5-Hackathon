@@ -21,7 +21,7 @@
 **DataFlow AI** is an enterprise-grade data analysis and visualization platform that empowers businesses and data professionals to make data-driven decisions faster. Leverage the power of artificial intelligence to automatically generate insights, create stunning visualizations, and interact with your data through natural language.
 
 <div align="center">
-  <img src="https://via.placeholder.com/800x450?text=DataFlow+Pro+AI+Dashboard" alt="DataFlow Pro AI Dashboard" />
+  <img src="https://via.placeholder.com/800x450?text=DataFlow+AI+Dashboard" alt="DataFlow AI Dashboard" />
 </div>
 
 ---
