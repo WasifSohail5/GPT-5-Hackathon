@@ -53,9 +53,9 @@ app.mount("/static", StaticFiles(directory="plots"), name="static")
 
 # Global settings
 SETTINGS = {
-    "api_base": os.getenv("GPT5_API_BASE", "https://api.aimlapi.com/v1"),
-    "api_key": os.getenv("GPT5_API_KEY", "361a27a60f6b4138982fd15278917fed"),
-    "model": os.getenv("GPT5_MODEL", "openai/gpt-5-chat-latest"),
+    "api_base": os.getenv("GPT5_API_BASE", ""),
+    "api_key": os.getenv("GPT5_API_KEY", ""),
+    "model": os.getenv("GPT5_MODEL", ""),
 }
 
 # Job storage
